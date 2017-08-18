@@ -1,0 +1,5 @@
+
+To Grade:
+- place keyvalue.c submission in submissions folder
+- run: $ sudo ./run.sh submissions/keyvalue.c
+- result is printed and saved in results/keyvalue.txt 

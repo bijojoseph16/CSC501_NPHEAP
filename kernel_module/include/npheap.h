@@ -46,5 +46,6 @@ struct npheap_cmd {
 #define NPHEAP_IOCTL_LOCK  _IOWR('N', 0x43, struct npheap_cmd)
 #define NPHEAP_IOCTL_UNLOCK  _IOWR('N', 0x44, struct npheap_cmd)
 #define NPHEAP_IOCTL_DELETE  _IOWR('N', 0x45, struct npheap_cmd)
+#define NPHEAP_IOCTL_GETSIZE  _IOWR('N', 0x46, struct npheap_cmd)
 
 #endif

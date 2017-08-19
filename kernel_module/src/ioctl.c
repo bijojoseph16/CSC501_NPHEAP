@@ -54,6 +54,15 @@ long npheap_unlock(struct npheap_cmd __user *user_cmd)
     return 0;
 }
 
+long npheap_getsize(struct npheap_cmd __user *user_cmd)
+{
+    return 0;
+}
+long npheap_delete(struct npheap_cmd __user *user_cmd)
+{
+    return 0;
+}
+
 long npheap_ioctl(struct file *filp, unsigned int cmd,
                                 unsigned long arg)
 {
@@ -62,6 +71,10 @@ long npheap_ioctl(struct file *filp, unsigned int cmd,
         return npheap_lock((void __user *) arg);
     case NPHEAP_IOCTL_UNLOCK:
         return npheap_unlock((void __user *) arg);
+    case NPHEAP_IOCTL_GETSIZE:
+        return npheap_getsize((void __user *) arg);
+    case NPHEAP_IOCTL_DELETE:
+        return npheap_delete((void __user *) arg);
     default:
         return -ENOTTY;
     }

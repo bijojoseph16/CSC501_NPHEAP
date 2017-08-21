@@ -32,3 +32,10 @@ int npheap_delete(int devfd, __u64 offset)
      cmd.offset = offset*getpagesize();
      return ioctl(devfd, NPHEAP_IOCTL_DELETE, &cmd);
 }
+
+long npheap_getsize(int devfd, __u64 offset)
+{
+     struct npheap_cmd cmd;
+     cmd.offset = offset*getpagesize();
+     return ioctl(devfd, NPHEAP_IOCTL_GETSIZE, &cmd);
+}

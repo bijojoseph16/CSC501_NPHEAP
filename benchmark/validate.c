@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     int i=0,number_of_threads = 1, number_of_objects=1024; 
     int tid;
     __u64 size;
-    __u64 key;
+    __u64 object_id;
     __u64 current_time;
     char data[8192],op,*mapped_data;
     char **obj;
@@ -32,17 +32,20 @@ int main(int argc, char *argv[])
     }
     // Replay the log
     // Validate
-    while(scanf("%c %d %llu %llu %llu %s",&op, &tid, &current_time, &key, &size, &data[0])!=EOF)
+    while(scanf("%c %d %llu %llu %llu %s",&op, &tid, &current_time, &object_id, &size, &data[0])!=EOF)
     {
         if(op == 'S')
         {
-            strcpy(obj[(int)key],data);
+            strcpy(obj[(int)object_id],data);
             memset(data,0,8192);
         } else if (op == 'G') {
-            if (strcmp(obj[(int)key], data)) {   
-                fprintf(stderr, "%d: Key %d has a wrong value %s v.s. %s\n",tid,(int)key,data,obj[(int)key]);
+            if (strcmp(obj[(int)object_id], data)) {   
+                fprintf(stderr, "%d: Key %d has a wrong value %s v.s. %s\n",tid,(int)object_id,data,obj[(int)object_id]);
                 error++; 
             }
+        }
+        else if (op == 'D') {
+            memset(obj[(int)object_id],0,8192);
         }
         if (error > 5) {
             break;

@@ -8,12 +8,14 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <string.h>
+#include <sys/wait.h>
+
 int main(int argc, char *argv[])
 {
     int i=0,number_of_processes = 1, number_of_objects=1024, number_of_transactions = 65536,j; 
     int a;
     int pid;
-    __u64 size;
+    int size;
     char data[8192];
     char filename[256];
     char *mapped_data;
@@ -37,7 +39,7 @@ int main(int argc, char *argv[])
     }
     srand((int)time(NULL)+(int)getpid());
     // Writing to objects
-    for(i=0;i<(number_of_processes-1) && pid == 0;i++)
+    for(i=0;i<(number_of_processes-1) && pid != 0;i++)
     {
         pid=fork();
     }
@@ -46,7 +48,11 @@ int main(int argc, char *argv[])
     for(i = 0; i < number_of_objects; i++)
     {
         npheap_lock(devfd,i);
-        size = rand()%8192;
+        do 
+        {
+            size = rand()%(8192);
+        }
+        while(size ==0);
         mapped_data = (char *)npheap_alloc(devfd,i,size);
         if(!mapped_data)
         {
@@ -54,14 +60,23 @@ int main(int argc, char *argv[])
             exit(1);
         }
 //        memset(mapped_data, 0, 4096);
-        a = rand();
+        a = rand()+1;
         gettimeofday(&current_time, NULL);
-        for(j=0;j<size/8;j++)
+        for(j=0;j<(size/8);j++)
             sprintf(mapped_data,"%08d",a);
         fprintf(fp,"S\t%d\t%ld\t%d\t%lu\t%s\n",pid,current_time.tv_sec * 1000000 + current_time.tv_usec,i,strlen(mapped_data),mapped_data);
-        npheap_unlock(devfd,i*getpagesize());
+        npheap_unlock(devfd,i);
     }
+    
+    // try delete something
+    i = rand()%256;
+    npheap_lock(devfd,i);
+    npheap_delete(devfd,i);
+    fprintf(fp,"D\t%d\t%ld\t%d\t%lu\t%s\n",pid,current_time.tv_sec * 1000000 + current_time.tv_usec,i,strlen(mapped_data),mapped_data);
+    npheap_unlock(devfd,i);
     close(devfd);
+    if(pid != 0)
+        wait(NULL);
     return 0;
 }
 

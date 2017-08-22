@@ -62,18 +62,20 @@ int main(int argc, char *argv[])
 //        memset(mapped_data, 0, 4096);
         a = rand()+1;
         gettimeofday(&current_time, NULL);
-        for(j=0;j<(size/8);j++)
-            sprintf(mapped_data,"%08d",a);
+        for(j = 0; j < size-10; j=strlen(mapped_data))
+        {
+            sprintf(mapped_data,"%s%d",mapped_data,a);
+        }
         fprintf(fp,"S\t%d\t%ld\t%d\t%lu\t%s\n",pid,current_time.tv_sec * 1000000 + current_time.tv_usec,i,strlen(mapped_data),mapped_data);
         npheap_unlock(devfd,i);
     }
-    
+/*    
     // try delete something
     i = rand()%256;
     npheap_lock(devfd,i);
     npheap_delete(devfd,i);
     fprintf(fp,"D\t%d\t%ld\t%d\t%lu\t%s\n",pid,current_time.tv_sec * 1000000 + current_time.tv_usec,i,strlen(mapped_data),mapped_data);
-    npheap_unlock(devfd,i);
+    npheap_unlock(devfd,i);*/
     close(devfd);
     if(pid != 0)
         wait(NULL);

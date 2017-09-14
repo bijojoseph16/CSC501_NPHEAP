@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
         {
             size = rand() % max_size_of_objects;
         }
-        while(size ==0 || size < 10);
+        while(size ==0 || size <= 10);
         mapped_data = (char *)npheap_alloc(devfd,i,size);
         if(!mapped_data)
         {

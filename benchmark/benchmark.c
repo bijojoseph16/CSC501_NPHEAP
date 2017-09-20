@@ -48,11 +48,11 @@ int main(int argc, char *argv[])
     for(i = 0; i < number_of_objects; i++)
     {
         npheap_lock(devfd,i);
-        do 
+        size = npheap_getsize(devfd,i);
+        while(size ==0 || size <= 10)
         {
             size = rand() % max_size_of_objects;
         }
-        while(size ==0 || size <= 10);
         mapped_data = (char *)npheap_alloc(devfd,i,size);
         if(!mapped_data)
         {
@@ -69,13 +69,13 @@ int main(int argc, char *argv[])
         fprintf(fp,"S\t%d\t%ld\t%d\t%lu\t%s\n",pid,current_time.tv_sec * 1000000 + current_time.tv_usec,i,strlen(mapped_data),mapped_data);
         npheap_unlock(devfd,i);
     }
-/*    
+    
     // try delete something
     i = rand()%256;
     npheap_lock(devfd,i);
     npheap_delete(devfd,i);
     fprintf(fp,"D\t%d\t%ld\t%d\t%lu\t%s\n",pid,current_time.tv_sec * 1000000 + current_time.tv_usec,i,strlen(mapped_data),mapped_data);
-    npheap_unlock(devfd,i);*/
+    npheap_unlock(devfd,i);
     close(devfd);
     if(pid != 0)
         wait(NULL);

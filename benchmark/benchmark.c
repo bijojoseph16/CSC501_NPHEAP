@@ -37,11 +37,11 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Device open failed");
         exit(1);
     }
-    srand((int)time(NULL)+(int)getpid());
     // Writing to objects
     for(i=0;i<(number_of_processes-1) && pid != 0;i++)
     {
         pid=fork();
+        srand((int)time(NULL)+(int)getpid());
     }
     sprintf(filename,"npheap.%d.log",(int)getpid());
     fp = fopen(filename,"w");
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
             fprintf(stderr,"Failed in npheap_alloc()\n");
             exit(1);
         }
-//        memset(mapped_data, 0, 4096);
+        memset(mapped_data, 0, size);
         a = rand()+1;
         gettimeofday(&current_time, NULL);
         for(j = 0; j < size-10; j=strlen(mapped_data))

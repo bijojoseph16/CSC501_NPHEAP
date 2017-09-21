@@ -64,13 +64,22 @@ int main(int argc, char *argv[])
     {
         size = npheap_getsize(devfd,i);
         if(size!=0)
-        mapped_data = (char *)npheap_alloc(devfd,i,npheap_getsize(devfd,i));
-        else
-            mapped_data = NULL;
-        if(strcmp(mapped_data,obj[i])!=0)
         {
-            fprintf(stderr, "Object %d has a wrong value %s v.s. %s\n",i,mapped_data,obj[i]);
-            error++;
+            mapped_data = (char *)npheap_alloc(devfd,i,npheap_getsize(devfd,i));
+            if(strcmp(mapped_data,obj[i])!=0)
+            {
+                 fprintf(stderr, "Object %d has a wrong value %s v.s. %s\n",i,mapped_data,obj[i]);
+                 error++;
+            }
+        }
+        else
+        {
+            mapped_data = NULL;
+            if(strlen(obj[i])!=0)
+            {
+                 fprintf(stderr, "Object %d should have a value %s\n",i,obj[i]);
+                 error++;
+            }
         }
     }
     if(error == 0)

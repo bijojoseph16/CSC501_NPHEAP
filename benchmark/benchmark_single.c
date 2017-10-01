@@ -155,11 +155,11 @@ int main(int argc, char *argv[])
 #ifdef DEBUG
     printf("Before delete.");
 #endif
+        gettimeofday(&current_time, NULL);
         npheap_delete(devfd, i);
 #ifdef DEBUG
     printf("After delete.");
 #endif
-        gettimeofday(&current_time, NULL);
         fprintf(fp,"D\t%d\t%ld\t%d\t%lu\t%s\n",pid,current_time.tv_sec * 1000000 + current_time.tv_usec,i,strlen(mapped_data),mapped_data);
         npheap_unlock(devfd, i);
     }
@@ -168,11 +168,11 @@ int main(int argc, char *argv[])
     {
         i = rand() % number_of_objects;
         npheap_lock(devfd, i);
+        gettimeofday(&current_time, NULL);
         size = npheap_getsize(devfd, i);
 	if (size != 0)
         {
             mapped_data = (char *)npheap_alloc(devfd,i,size);
-            gettimeofday(&current_time, NULL);
             fprintf(fp,"G\t%d\t%ld\t%d\t%lu\t%s\n",pid,current_time.tv_sec * 1000000 + current_time.tv_usec,i,strlen(mapped_data),mapped_data);
         }
         npheap_unlock(devfd, i);
